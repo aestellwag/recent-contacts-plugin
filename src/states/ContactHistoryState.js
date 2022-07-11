@@ -1,13 +1,15 @@
 const ACTION_ADD_CONTACT = 'ADD_CONTACT';
+const ACTION_SET_CONTACTS = 'SET_CONTACTS'
 const ACTION_CLEAR_HISTORY = 'CLEAR_HISTORY';
-const MaxContacts = 5;
+const MaxContacts = 25;
 
 const initialState = {
   contactList: [],
 };
 
 export class Actions {
-  static addContactToHistory = (contact) => ({ type: ACTION_ADD_CONTACT, contact });
+  static addContact = (contact) => ({ type: ACTION_ADD_CONTACT, contact });
+  static setContactList = (contactList) => ({ type: ACTION_SET_CONTACTS, contactList})
   static clearHistory = () => ({ type: ACTION_CLEAR_HISTORY });
 }
 
@@ -19,6 +21,11 @@ export function reduce(state = initialState, action) {
       console.log('NEWLIST: ', newContactList);
       return {
         contactList: newContactList
+      };
+    }
+    case ACTION_SET_CONTACTS: {
+      return {
+        contactList: action.contactList
       };
     }
     case ACTION_CLEAR_HISTORY: {
