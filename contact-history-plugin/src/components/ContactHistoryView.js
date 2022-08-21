@@ -26,6 +26,10 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
+import Paper from '@material-ui/core/Paper';
+
+import ChatUtil from '../utils/ChatUtil';
+
 //import { withStyles } from "@material-ui/core/styles";
 
 const PLUGIN_NAME = 'RecentContactsPlugin';
@@ -35,7 +39,9 @@ const ContactData = styled('div')`
 `;
 
 const INITIAL_STATE = {
-  selectedChannelSid: undefined
+  selectedChannelSid: undefined,
+  messages: [],
+  chatFriendlyName: ""
 };
 
 class ContactHistory extends React.Component {
@@ -59,12 +65,18 @@ class ContactHistory extends React.Component {
     }
   };
 
-  openTranscript = (channelSid) => {
-    this.setState({ selectedChannelSid: channelSid });
+  openTranscript = async (channelSid) => {
     Actions.invokeAction('SetComponentState', {
       name: 'ChatTranscript',
       state: { isOpen: true }
     });
+    
+    const chatData = await ChatUtil.getMessages(channelSid);
+    let messages = chatData.messages;
+    let chatFriendlyName = chatData.chat_friendly_name
+    if (!messages) chatFriendlyName = "Not Available";
+    //if no data show notification
+    this.setState({ selectedChannelSid: channelSid, messages, chatFriendlyName });
   }
 
   resetChannel = () => {
@@ -76,13 +88,13 @@ class ContactHistory extends React.Component {
     return (
       <FlexBox>
         <FlexBox vertical>
-
           <Button
             onClick={() => {
               this.props.clearHistory();
               RecentContacts.clearContactList();
             }}
           > CLEAR HISTORY </Button>
+          <Paper elevation={0} style={{ maxHeight: '100%', overflow: 'auto', margin: '6px' }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -165,15 +177,16 @@ class ContactHistory extends React.Component {
                       > <QuestionAnswerIcon /> </Button>
                     }
                   </TableCell>
-
-
                 </TableRow>))}
-
             </TableBody>
-
           </Table>
+          </Paper>
         </FlexBox>
-        <ChatTranscript key="chat-channel-transcript" channelSid={this.state.selectedChannelSid} resetChannel={this.resetChannel} />
+        <ChatTranscript key="chat-channel-transcript" 
+        channelSid={this.state.selectedChannelSid} 
+        chatFriendlyName={this.state.chatFriendlyName} 
+        messages={this.state.messages} 
+        resetChannel={this.resetChannel} />
       </FlexBox>
     );
   };
