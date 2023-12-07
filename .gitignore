@@ -64,3 +64,8 @@ typings/
 appConfig.js
 pluginsService.js
 build/
+contact-history-plugin-v2/.DS_Store
+.gitignore
+.gitignore
+.gitignore
+serverless/package-lock.json
