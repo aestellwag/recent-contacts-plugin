@@ -50,13 +50,6 @@ This solution contains both the Flex 1.x UI version as well as a new Flex UI 2.0
 Install the dependencies by running `npm install`:
 
 ```bash
-cd recent-contacts-plugin/contact-history-plugin
-npm install
-```
-
-or for Flex UI 2.0
-
-```bash
 cd recent-contacts-plugin/contact-history-plugin-v2
 npm install
 ```
